@@ -24,7 +24,7 @@ map.on('load', function(){
          "data": "jsons/serviceAreas/sultan.geojson"
      });
     map.addLayer({
-       "id":"duvall",
+       "id":"sultan",
        "type":"fill",
        "source":"sultan",
        "layout": {'visibility': 'visible'},
@@ -50,7 +50,15 @@ map.addSource('houses', {
   cluster: true,
   clusterRadius: 50,
 });
-
+map.addLayer({
+  "id":"uncluster",
+  "type":"circle",
+  "source":"houses",
+  "filter":['!',['has','point_count']],
+  "paint": {
+    'circle-color':'purple',
+    'circle-radius':3}
+});
 map.addLayer({
      "id":"houses",
      "type":"circle",
@@ -95,42 +103,63 @@ map.addLayer({
               },
             });
 
-            var draw = new MapboxDraw({
+        var draw = new MapboxDraw({
             displayControlsDefault: false,
             controls: {
-            polygon: true,
-            trash: true
-            },
-            defaultMode: 'draw_polygon'
+                polygon: true,
+                trash: true
+                },
+            defaultMode: 'simple_select'
             });
-            map.addControl(draw);
+          map.addControl(draw);
 
-            map.on('draw.create', updateArea);
-            map.on('draw.delete', updateArea);
-            map.on('draw.update', updateArea);
+          map.on('draw.create', updateArea);
+          map.on('draw.delete', updateArea);
+          map.on('draw.update', updateArea);
 
-            function updateArea(e) {
+          function updateArea(e) {
             var data = draw.getAll();
             var answer = document.getElementById('calculated-area');
-            if (data.features.length > 0) {
-            // var area = turf.area(data);
-            var area = turf.pointsWithinPolygon(addresses, data);
-            // restrict to area to 2 decimal points
-            // var rounded_area = Math.round(area * 100) / 100;
-            answer.innerHTML =
-            '<p><strong>' +
-            area.features.length +
-            '</strong></p><p>parcels</p>';
-            } else {
-            answer.innerHTML = '';
-            if (e.type !== 'draw.delete')
-            alert('Use the draw tools to draw a polygon!');
-            }
-            }
+                if (data.features.length > 0) {
+                    // var area = turf.area(data);
+                    var area = turf.pointsWithinPolygon(addresses, data);
+                    // restrict to area to 2 decimal points
+                    // var rounded_area = Math.round(area * 100) / 100;
+                    answer.innerHTML =
+                    '<p><strong>' +
+                    area.features.length +
+                    '</strong></p><p>parcels</p>';
+                    }
+                else {
+                    answer.innerHTML = '';
+                    if (e.type !== 'draw.delete')
+                    alert('Use the draw tools to draw a polygon!');
+                    }
+                };
 //         Object.size = function(area){
 //         for (key in area) {
 //           if (obj.hasOwnProperty(key)) size ++;
 //         }
 //         return size;
 //         };
+
+      map.on('click', 'houses', function (e) {
+        var features = map.queryRenderedFeatures(e.point, {
+          layers: ['houses']
+          });
+        var clusterId = features[0].properties.cluster_id;
+        map.getSource('houses').getClusterExpansionZoom(
+          clusterId,
+          function (err, zoom) {
+            if (err) return;
+
+            map.easeTo({
+              center: features[0].geometry.coordinates,
+              zoom: zoom
+            });
+          }
+        );
+      });
+
+
 });
