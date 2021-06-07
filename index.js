@@ -42,52 +42,50 @@ map.on('load', function(){
           },
         });
 
-
-
-map.addSource('houses', {
-  type: 'geojson',
-  data: 'jsons/snoAddresses.geojson',
-  cluster: true,
-  clusterRadius: 50,
-});
-map.addLayer({
-  "id":"uncluster",
-  "type":"circle",
-  "source":"houses",
-  "filter":['!',['has','point_count']],
-  "paint": {
-    'circle-color':'purple',
-    'circle-radius':3}
-});
-map.addLayer({
-     "id":"houses",
-     "type":"circle",
-     "source": 'houses',
-     "layout": {'visibility': 'visible'},
-     "filter": ['has','point_count'],
-     "paint": {
-      'circle-color': [
-                  'step',
-                  ['get', 'point_count'],
-                  '#51bbd6',
-                  100,
-                  '#f1f075',
-                  750,
-                  '#f28cb1'
-              ],
-              'circle-radius': [
-                  'step',
-                  ['get', 'point_count'],
-                  10,
-                  100,
-                  15,
-                  750,
-                  18
+  map.addSource('houses', {
+    type: 'geojson',
+    data: 'jsons/snoAddresses.geojson',
+    cluster: true,
+    clusterRadius: 50,
+  });
+    map.addLayer({
+      "id":"uncluster",
+      "type":"circle",
+      "source":"houses",
+      "filter":['!',['has','point_count']],
+      "paint": {
+        'circle-color':'purple',
+        'circle-radius':3}
+    });
+    map.addLayer({
+         "id":"houses",
+         "type":"circle",
+         "source": 'houses',
+         "layout": {'visibility': 'visible'},
+         "filter": ['has','point_count'],
+         "paint": {
+          'circle-color': [
+                      'step',
+                      ['get', 'point_count'],
+                      '#51bbd6',
+                      100,
+                      '#f1f075',
+                      750,
+                      '#f28cb1'
                   ],
-        },
-      });
+                  'circle-radius': [
+                      'step',
+                      ['get', 'point_count'],
+                      10,
+                      100,
+                      15,
+                      750,
+                      18
+                      ],
+            },
+          });
 
-      map.addLayer({
+    map.addLayer({
            "id":"count",
            "type":"symbol",
            "source": 'houses',
@@ -102,6 +100,51 @@ map.addLayer({
             'text-color': 'black',
               },
             });
+
+
+
+    var redpep = {
+      type: 'FeatureCollection',
+      features: [{
+        type: 'Feature',
+        properties: {name: 'Red Pepper'},
+        geometry: {
+          type: 'Point',
+          coordinates:[-121.817760, 47.862394]
+        }
+      }]
+    };
+
+
+      map.addLayer({
+        'id': 'redpep',
+        'type': 'symbol',
+        'source': {
+          type: 'geojson',
+          data: redpep
+        },
+        'layout': {
+          'text-field': ['get', 'name'],
+          'text-size': 8,
+          'text-variable-anchor': ['top'],
+          'text-radial-offset': .5,
+        },
+        'paint': {
+          'text-color': 'black',
+
+        }
+      });
+      map.addLayer({
+        'id': 'redpepcirc',
+        'type': 'circle',
+        'source': {
+          type: 'geojson',
+          data: redpep
+        },
+        'paint': {
+          'circle-radius': 3
+        }
+      });
 
         var draw = new MapboxDraw({
             displayControlsDefault: false,
@@ -121,15 +164,16 @@ map.addLayer({
             var data = draw.getAll();
             var answer = document.getElementById('calculated-area');
                 if (data.features.length > 0) {
-                    // var area = turf.area(data);
                     var area = turf.pointsWithinPolygon(addresses, data);
-                    // restrict to area to 2 decimal points
+                    // for (code in area.properties){
+                    //   var type = feature.properties.length;
+                    // };
                     // var rounded_area = Math.round(area * 100) / 100;
                     answer.innerHTML =
                     '<p><strong>' +
                     area.features.length +
                     '</strong></p><p>parcels</p>';
-                    }
+                  }
                 else {
                     answer.innerHTML = '';
                     if (e.type !== 'draw.delete')

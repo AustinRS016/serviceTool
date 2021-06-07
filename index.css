@@ -18,7 +18,7 @@ body {
   color: #2F2F2F;
   font-size:1.2em;
   max-width: 65em;
-
+  height: 100%;
   margin:auto;
 
 
@@ -43,8 +43,12 @@ body {
   text-align: center;
   z-index: 2;
 }
+.description{
+  font-size: 20;
+  font-style: 'Tahoma';
+}
 
-p {
+.credits {
   font-family: 'Open Sans';
   margin: 0;
   font-size: 13px;

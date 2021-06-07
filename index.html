@@ -18,13 +18,13 @@
 	</head>
 
 	<body>
-		<h1 class ="headers"><center>Pizza Delivery</center></h1>
+		<h1 class="headers"><center>Pizza Delivery</center></h1>
 		<h2 class="subheaders"><center>Network Analysis and Parcel Counter for Area of Service Selection</center></h2>
 		<!-- create div for the map here -->
 
 		<div id='map'>
 			<div class="calculation-box">
-					<p>Draw a polygon to get the parcel count</p>
+					<p>Draw a polygon to get the parcel count inside of it.</p>
 					<div id="calculated-area"></div>
 			</div>
 			<div class="map-overlay top">
@@ -38,7 +38,14 @@
 		</div>
 
 <script src = 'index.js'></script>
-<p>Click on the map to start drawing a polygon. Double click when drawing the final vertex to complete the polygon.</p>
-
 	</body>
+<p class="credits">Parcel data from Snohomish County Assesor. Network layer generated with <i><a href="https://pro.arcgis.com/en/pro-app/latest/tool-reference/ready-to-use/itemdesc-generate-service-areas.htm" target="_blank">Generate Service Areas (Ready To Use)</a></i> tool from ArcGIS Pro.
+<br>
+<p class='description'>Select the polygon tool in the top right corner and click on the map to start drawing a polygon. Double click when drawing the final vertex to complete the polygon.</p>
+<br>
+<h3><u>About:</u></h3>
+
+<p class="description">The parcel counts show parcels that are residential. The parcel data was downloaded from the Snohomish County <a href="https://snohomishcountywa.gov/372/GIS-FTP-Data" target="_blank">FTP site</a> and geolocated using the ArcGIS Pro <i>Geocode Addresses </i>tool. As of now this is a parcel estimate and does not account for multiple households on one plot of land (i.e. apartments, duplexes etc..). All the parcels for each zipcode that overlapped the potential service area were included.</p>
+<br>
+The road network layer shows all the distances accessable within 15 minutes of driving. All the parameters for the tool were left default, including the 100 meter buffer around the roads.</p>
 </html>
