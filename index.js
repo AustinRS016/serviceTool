@@ -69,9 +69,9 @@ map.on('load', function(){
                       ['get', 'point_count'],
                       '#51bbd6',
                       100,
-                      '#f1f075',
+                      '#51bbd6',
                       750,
-                      '#f28cb1'
+                      '#51bbd6'
                   ],
                   'circle-radius': [
                       'step',
@@ -163,16 +163,20 @@ map.on('load', function(){
           function updateArea(e) {
             var data = draw.getAll();
             var answer = document.getElementById('calculated-area');
+            var polycoords = document.getElementById('coordinates');
                 if (data.features.length > 0) {
                     var area = turf.pointsWithinPolygon(addresses, data);
-                    // for (code in area.properties){
-                    //   var type = feature.properties.length;
-                    // };
-                    // var rounded_area = Math.round(area * 100) / 100;
+                    var coords = turf.coordAll(data)
+
                     answer.innerHTML =
                     '<p><strong>' +
                     area.features.length +
-                    '</strong></p><p>parcels</p>';
+                    '</strong></p>';
+
+                    polycoords.innerHTML =
+                    '<p "class"=coords>' +
+                    coords +
+                    '</p>';
                   }
                 else {
                     answer.innerHTML = '';
@@ -180,12 +184,7 @@ map.on('load', function(){
                     alert('Use the draw tools to draw a polygon!');
                     }
                 };
-//         Object.size = function(area){
-//         for (key in area) {
-//           if (obj.hasOwnProperty(key)) size ++;
-//         }
-//         return size;
-//         };
+
 
       map.on('click', 'houses', function (e) {
         var features = map.queryRenderedFeatures(e.point, {
